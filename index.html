@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Livestock & Environment | IIS Mendel 4PA</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,700;9..144,900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ink:   #0d0f0c;
+    --paper: #f5f0e8;
+    --moss:  #2d5a27;
+    --leaf:  #4a8c3f;
+    --gold:  #c8860a;
+    --amber: #e8a020;
+    --sky:   #1a3a5c;
+    --mist:  #e8ede4;
+    --line:  #c8c0b0;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); font-size: 16px; line-height: 1.6; }
+
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--ink);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 3rem; height: 56px;
+    border-bottom: 2px solid var(--leaf);
+  }
+  .nav-brand { display: flex; align-items: center; gap: 10px; color: #fff; font-size: .75rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+  .nav-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--amber); }
+  .nav-links { display: flex; gap: 2rem; }
+  .nav-links a { color: #aaa; text-decoration: none; font-size: .72rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; transition: color .2s; }
+  .nav-links a:hover { color: var(--amber); }
+
+  .hero { background: var(--ink); color: #fff; padding: 7rem 3rem 5rem; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 60% at 80% 50%, rgba(74,140,63,.18) 0%, transparent 70%), radial-gradient(ellipse 40% 50% at 10% 80%, rgba(200,134,10,.1) 0%, transparent 60%); }
+  .hero-tag { display: inline-block; font-size: .65rem; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: var(--amber); border: 1px solid var(--gold); padding: 4px 12px; border-radius: 2px; margin-bottom: 1.5rem; }
+  .hero h1 { font-family: 'Fraunces', serif; font-size: clamp(3rem, 7vw, 6.5rem); font-weight: 900; line-height: .95; letter-spacing: -.02em; max-width: 900px; position: relative; }
+  .hero h1 em { font-style: italic; color: var(--amber); }
+  .hero-sub { margin-top: 2rem; max-width: 560px; font-size: 1rem; font-weight: 300; color: #bbb; line-height: 1.7; position: relative; }
+  .hero-badges { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 2.5rem; position: relative; }
+  .badge { font-size: .65rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; padding: 5px 14px; border-radius: 2px; }
+  .badge-light { background: rgba(255,255,255,.08); color: #ccc; }
+  .badge-green { background: rgba(74,140,63,.25); color: #7dd870; }
+  .hero-line { height: 1px; background: linear-gradient(90deg, var(--leaf) 0%, transparent 80%); margin: 3.5rem 0 0; }
+
+  .section { padding: 5rem 3rem; }
+  .section + .section { border-top: 1px solid var(--line); }
+  .max-w { max-width: 1100px; margin: 0 auto; }
+
+  .sec-label { font-size: .65rem; letter-spacing: .18em; text-transform: uppercase; font-weight: 600; color: var(--leaf); margin-bottom: .4rem; }
+  .sec-num { font-family: 'Fraunces', serif; font-size: clamp(3.5rem, 6vw, 5rem); font-weight: 900; line-height: 1; color: var(--mist); position: absolute; right: 0; top: -1rem; letter-spacing: -.04em; pointer-events: none; user-select: none; }
+  .sec-title-wrap { position: relative; margin-bottom: 3rem; }
+  .sec-title { font-family: 'Fraunces', serif; font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 700; line-height: 1.15; color: var(--ink); }
+  .sec-desc { margin-top: .5rem; color: #666; font-size: .9rem; }
+
+  .tabs-bar { display: flex; gap: 0; border-bottom: 2px solid var(--line); margin-bottom: 2.5rem; }
+  .tab-btn { background: none; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: .72rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: #999; padding: .9rem 1.8rem; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all .2s; }
+  .tab-btn:hover { color: var(--ink); }
+  .tab-btn.active { color: var(--moss); border-bottom-color: var(--moss); background: var(--mist); }
+  .tab-pane { display: none; animation: fadeUp .3s ease; }
+  .tab-pane.active { display: block; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .pane-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
+  @media(max-width:700px){ .pane-grid { grid-template-columns: 1fr; } }
+  .pane-body p { color: #444; font-size: .95rem; line-height: 1.75; margin-bottom: 1rem; }
+  .pane-body p strong { color: var(--ink); }
+  .it-box { border-left: 3px solid var(--amber); padding: .75rem 1rem; background: #fffbf2; font-size: .85rem; color: #7a6a40; font-style: italic; border-radius: 0 4px 4px 0; }
+
+  .feature-card { background: var(--mist); border-radius: 8px; padding: 1.8rem; }
+  .fc-icon { width: 42px; height: 42px; border-radius: 8px; background: var(--moss); display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; }
+  .fc-icon svg { width: 20px; height: 20px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .feature-card.amber .fc-icon { background: var(--gold); }
+  .feature-card h5 { font-weight: 600; font-size: .95rem; margin-bottom: .4rem; }
+  .feature-card p { font-size: .85rem; color: #666; }
+
+  .eco-wrap { background: var(--ink); border-radius: 12px; padding: 3rem; color: #fff; }
+  .eco-grid { display: grid; grid-template-columns: 1fr auto 1fr; gap: 2rem; align-items: center; }
+  @media(max-width:700px){ .eco-grid { grid-template-columns: 1fr; } }
+  .eco-col-title { font-size: .62rem; letter-spacing: .15em; text-transform: uppercase; color: #666; margin-bottom: 1rem; text-align: center; }
+  .eco-node { display: flex; align-items: center; gap: .75rem; padding: .9rem 1.2rem; border-radius: 6px; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); cursor: pointer; transition: all .2s; font-size: .9rem; font-weight: 500; color: #ccc; margin-bottom: .75rem; text-align: left; width: 100%; font-family: 'DM Sans', sans-serif; }
+  .eco-node svg { width: 18px; height: 18px; flex-shrink: 0; }
+  .eco-node:hover, .eco-node.active { background: rgba(74,140,63,.2); border-color: var(--leaf); color: #fff; }
+  .eco-node.active { box-shadow: 0 0 0 1px var(--leaf); }
+  .eco-center { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+  .eco-circle { width: 140px; height: 140px; border-radius: 50%; border: 3px solid var(--leaf); display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(74,140,63,.1); text-align: center; }
+  .eco-circle svg { width: 32px; height: 32px; stroke: var(--leaf); fill: none; stroke-width: 1.5; margin-bottom: .4rem; }
+  .eco-circle span { font-size: .75rem; font-weight: 600; color: #aaa; letter-spacing: .05em; }
+  .eco-info { margin-top: 2rem; min-height: 80px; padding: 1.5rem; background: rgba(255,255,255,.04); border-radius: 8px; border-left: 3px solid var(--leaf); font-size: .9rem; color: #bbb; line-height: 1.7; }
+  .eco-info.placeholder { color: #555; font-style: italic; border-left-color: #333; }
+
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2.5rem; }
+  @media(max-width:700px){ .compare-grid { grid-template-columns: 1fr; } }
+  .compare-card { border-radius: 10px; padding: 2rem; border-top: 4px solid transparent; }
+  .compare-card.usa { background: #eef3f9; border-top-color: #3a6fc4; }
+  .compare-card.ita { background: #eef5ec; border-top-color: var(--leaf); }
+  .compare-card h4 { font-family: 'Fraunces', serif; font-size: 1.3rem; font-weight: 700; margin-bottom: .2rem; }
+  .cc-sub { font-size: .7rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: #888; margin-bottom: 1rem; }
+  .compare-card p { font-size: .9rem; color: #444; line-height: 1.7; margin-bottom: 1rem; }
+  .compare-card .it-box { background: #fff; }
+  .info-row { display: flex; align-items: flex-start; gap: .7rem; padding: .65rem 0; border-bottom: 1px solid rgba(0,0,0,.07); font-size: .82rem; }
+  .info-row:last-child { border-bottom: none; }
+  .info-row svg { width: 14px; height: 14px; flex-shrink: 0; margin-top: 2px; }
+  .info-row strong { color: var(--ink); }
+  .info-row span { color: #555; }
+
+  .chart-panel { background: var(--ink); border-radius: 12px; padding: 2.5rem; color: #fff; }
+  .chart-panel h4 { font-family: 'Fraunces', serif; font-size: 1.2rem; margin-bottom: .3rem; }
+  .chart-panel p { font-size: .8rem; color: #777; margin-bottom: 1.5rem; }
+  .chart-panel select { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.15); color: #ccc; font-size: .8rem; padding: .5rem 1rem; border-radius: 4px; cursor: pointer; margin-bottom: 1.5rem; font-family: 'DM Sans', sans-serif; }
+  .chart-canvas-wrap { height: 300px; }
+
+  .tech-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
+  @media(max-width:700px){ .tech-grid { grid-template-columns: 1fr; } }
+  .tech-item { display: flex; gap: 1rem; padding: 1.25rem 0; border-bottom: 1px solid var(--line); }
+  .tech-item:last-child { border-bottom: none; }
+  .tech-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+  .tech-item h5 { font-size: .9rem; font-weight: 600; margin-bottom: .25rem; }
+  .tech-item p { font-size: .82rem; color: #666; line-height: 1.6; }
+  .region-label { font-size: .65rem; letter-spacing: .15em; text-transform: uppercase; font-weight: 700; color: var(--gold); margin-bottom: 1rem; padding-bottom: .5rem; border-bottom: 1px solid var(--line); }
+  .chart-panel-light { background: var(--mist); border-radius: 10px; padding: 2rem; }
+  .chart-panel-light h5 { font-weight: 600; font-size: .95rem; margin-bottom: 1rem; color: var(--ink); }
+  .chart-canvas-wrap-sm { height: 220px; }
+
+  footer { background: var(--ink); color: #555; padding: 3rem; font-size: .78rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; border-top: 2px solid var(--leaf); }
+  footer strong { color: #aaa; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">
+    <div class="nav-dot"></div>
+    IIS G. Mendel — Villa Cortese
+  </div>
+  <div class="nav-links">
+    <a href="#foundations">Foundations</a>
+    <a href="#ecosystem">Ecosystem</a>
+    <a href="#comparison">Comparison</a>
+    <a href="#trends">Trends</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="max-w">
+    <div class="hero-tag">CLIL · Vocational Ag Science · 4PA — Crespi / Hampton</div>
+    <h1>Agriculture,<br>Production<br>&amp; <em>Sustainability</em></h1>
+    <p class="hero-sub">Exploring how livestock farming interacts with the environment — comparing the industrial efficiency of the US with the quality-driven traditions of Italy.</p>
+    <div class="hero-badges">
+      <span class="badge badge-light">CLIL Material</span>
+      <span class="badge badge-green">Dairy Systems</span>
+      <span class="badge badge-light">EN / IT</span>
+    </div>
+  </div>
+  <div class="hero-line"></div>
+</div>
+
+<!-- SECTION 1 -->
+<section class="section" id="foundations">
+<div class="max-w">
+  <div class="sec-title-wrap">
+    <div class="sec-label">Section 01</div>
+    <h2 class="sec-title">The Three Pillars of Modern Animal Science</h2>
+    <p class="sec-desc">Management, genetics, and territory-based production — three lenses to understand the modern farm.</p>
+    <span class="sec-num">01</span>
+  </div>
+  <div class="tabs-bar">
+    <button class="tab-btn active" onclick="switchTab('mgt',this)">Management</button>
+    <button class="tab-btn" onclick="switchTab('brd',this)">Breeding</button>
+    <button class="tab-btn" onclick="switchTab('pdo',this)">PDO Model (DOP)</button>
+  </div>
+  <div class="tab-pane active" id="pane-mgt">
+    <div class="pane-grid">
+      <div class="pane-body">
+        <h3 style="font-family:'Fraunces',serif;font-size:1.4rem;margin-bottom:1rem;">Operational Efficiency</h3>
+        <p>Modern management is about <strong>Precision</strong>. By monitoring animal health and nutrition via sensors, farmers reduce waste. Every kg of feed saved is a reduction in land use and CO₂ emissions.</p>
+        <div class="it-box">La gestione moderna si basa sulla <strong>precisione</strong>. Monitorando salute e nutrizione tramite sensori si riducono gli sprechi: ogni kg di mangime risparmiato riduce l'uso del suolo e le emissioni.</div>
+      </div>
+      <div>
+        <div class="feature-card amber">
+          <div class="fc-icon"><svg viewBox="0 0 24 24"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg></div>
+          <h5>Climate Control</h5>
+          <p>Optimizing barn temperature and ventilation ensures animals produce more with less physiological stress — key for milk yield and welfare.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="tab-pane" id="pane-brd">
+    <div class="pane-grid">
+      <div class="pane-body">
+        <h3 style="font-family:'Fraunces',serif;font-size:1.4rem;margin-bottom:1rem;">Genetic Progress</h3>
+        <p>We use <strong>Genomic Selection</strong> to identify the best animals at birth. We no longer breed only for "more milk", but for <em>more efficient</em> and <em>longer-living</em> animals.</p>
+        <div class="it-box">Usiamo la selezione genomica per identificare i migliori capi alla nascita. Non alleviamo più solo per "più latte", ma per animali più <strong>efficienti e longevi</strong>.</div>
+      </div>
+      <div>
+        <div class="feature-card">
+          <div class="fc-icon"><svg viewBox="0 0 24 24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></div>
+          <h5>Lower Methane Traits</h5>
+          <p>Current research targets genes that influence the rumen microbiome to naturally emit less methane (CH₄) — reducing the farm's GHG footprint from within.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="tab-pane" id="pane-pdo">
+    <div class="pane-grid">
+      <div class="pane-body">
+        <h3 style="font-family:'Fraunces',serif;font-size:1.4rem;margin-bottom:1rem;">Protected Designation of Origin</h3>
+        <p>In Italy, the <strong>PDO model (DOP)</strong> links production to a specific territory. It imposes strict rules on feeding — e.g., no silage for some cheeses — to ensure quality and tradition.</p>
+        <div class="it-box">Il modello <strong>DOP</strong> lega la produzione a un territorio specifico. Impone regole ferree sull'alimentazione (es. niente insilati per certi formaggi) per garantire qualità e tradizione.</div>
+      </div>
+      <div>
+        <div class="feature-card amber">
+          <div class="fc-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg></div>
+          <h5>Value over Volume</h5>
+          <p>PDO allows smaller farms to stay profitable by selling <em>quality</em> rather than mass commodity — preserving both rural landscape and traditional knowledge.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- SECTION 2 -->
+<section class="section" id="ecosystem" style="background:#f0ebe0;">
+<div class="max-w">
+  <div class="sec-title-wrap">
+    <div class="sec-label">Section 02</div>
+    <h2 class="sec-title">Systems Analysis: Metabolic Flows</h2>
+    <p class="sec-desc">How a farm processes resources and impacts the surrounding environment. Click a node to learn more.</p>
+    <span class="sec-num">02</span>
+  </div>
+  <div class="eco-wrap">
+    <div class="eco-grid">
+      <div>
+        <p class="eco-col-title">Inputs</p>
+        <button class="eco-node" onclick="selectNode('water',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#60a0d0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+          Water
+        </button>
+        <button class="eco-node" onclick="selectNode('feed',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#c8860a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+          Feed / Land
+        </button>
+      </div>
+      <div class="eco-center">
+        <div style="color:#555;font-size:1.4rem;font-weight:300;">→</div>
+        <div class="eco-circle">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <span>The Farm Unit</span>
+        </div>
+        <div style="color:#555;font-size:1.4rem;font-weight:300;">→</div>
+      </div>
+      <div>
+        <p class="eco-col-title">Outputs</p>
+        <button class="eco-node" onclick="selectNode('ghg',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/></svg>
+          Gas (CH₄ / NH₃)
+        </button>
+        <button class="eco-node" onclick="selectNode('waste',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#4a8c3f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+          Nutrient Load
+        </button>
+      </div>
+    </div>
+    <div class="eco-info placeholder" id="node-info">
+      ← Click an input or output node to see its environmental significance.
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- SECTION 3 -->
+<section class="section" id="comparison">
+<div class="max-w">
+  <div class="sec-title-wrap">
+    <div class="sec-label">Section 03</div>
+    <h2 class="sec-title">Global Perspectives: Idaho vs. Lombardy</h2>
+    <p class="sec-desc">Two different success stories in the dairy world — same pressure, different solutions.</p>
+    <span class="sec-num">03</span>
+  </div>
+  <div class="compare-grid">
+    <div class="compare-card usa">
+      <h4 style="color:#1a3a5c;">The Idaho Model</h4>
+      <div class="cc-sub">🇺🇸 USA · CAFOs · Scale &amp; Efficiency</div>
+      <p>In Idaho, dairy farming is defined by <strong>Scale and Efficiency</strong>. The "Magic Valley" hosts massive CAFOs with thousands of cows. Land is vast but water is scarce — the focus is maximizing output with industrial logistics. Milk is a <em>commodity</em> for cheese factories.</p>
+      <div class="it-box" style="background:#f0f4fb;">In Idaho, l'allevamento è definito da scala ed efficienza. La "Magic Valley" ospita operazioni massicce (CAFO) con migliaia di vacche. L'acqua scarseggia; il focus è massimizzare la resa. Il latte è una "commodity".</div>
+      <div style="margin-top:1.2rem;">
+        <div class="info-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#e06030" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <div><strong>Main risk:</strong> <span> Nitrate &amp; phosphorus leaching into the Eastern Snake Plain Aquifer — monitored via mg/L thresholds.</span></div>
+        </div>
+        <div class="info-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#3a6fc4" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <div><strong>Regulation:</strong> <span> ISDA rules + EPA NPDES permits. N application follows the agronomic rate (matched to crop uptake), with setback distances for manure.</span></div>
+        </div>
+        <div class="info-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#4a8c3f" stroke-width="2" stroke-linecap="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+          <div><strong>Waste-to-resource:</strong> <span> Enriched biochar, hydrochar (hydrothermal carbonization), recycled irrigation water. Carbon credits via California LCFS as economic driver.</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="compare-card ita">
+      <h4 style="color:#2d5a27;">The Italian Model</h4>
+      <div class="cc-sub">🇮🇹 Italy · Po Valley · Quality &amp; Concentration</div>
+      <p>In Lombardy, the model is about <strong>Quality and Concentration</strong>. Farms are smaller (200–400 cows) but packed into the fertile Po Valley. Land is scarce and strictly regulated by EU law. Production is tied to high-value DOP brands with strict feeding rules.</p>
+      <div class="it-box">In Lombardia, le stalle sono più piccole (200–400 capi) ma concentrate nella Pianura Padana. La terra è scarsa e soggetta a normative UE severe. La produzione è legata ai marchi <strong>DOP</strong>.</div>
+      <div style="margin-top:1.2rem;">
+        <div class="info-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#e06030" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <div><strong>Main risk:</strong> <span> NH₃ emissions, fine particulates (PM₂.₅), water eutrophication — monitored via NH₃ volatilization rates.</span></div>
+        </div>
+        <div class="info-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#3a6fc4" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <div><strong>Regulation:</strong> <span> EU Nitrates Directive (91/676/EEC) + CAP cross-compliance. In NVZs: hard cap of <strong>170 kg N/ha per year</strong>.</span></div>
+        </div>
+        <div class="info-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#4a8c3f" stroke-width="2" stroke-linecap="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+          <div><strong>Waste-to-resource:</strong> <span> Biogas (renewable energy) + nutrient-rich digestate. EU feed-in tariffs and CAP subsidies tied to environmental standards.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="chart-panel">
+    <h4>Data Visualization: Regional Differences</h4>
+    <p>Select a metric to compare the two systems in numbers.</p>
+    <select id="metric-select" onchange="updateComparisonChart()">
+      <option value="herd">Average Herd Size (head count)</option>
+      <option value="density">Livestock Density (Cows / ha)</option>
+      <option value="nitrogen">Max Nitrogen Application (kg N / ha / yr)</option>
+    </select>
+    <div class="chart-canvas-wrap"><canvas id="comparison-chart"></canvas></div>
+  </div>
+</div>
+</section>
+
+<!-- SECTION 4 -->
+<section class="section" id="trends" style="background:#f0ebe0;">
+<div class="max-w">
+  <div class="sec-title-wrap">
+    <div class="sec-label">Section 04</div>
+    <h2 class="sec-title">The Future: Technological Mitigation</h2>
+    <p class="sec-desc">Reducing the environmental "hoof-print" — tools and strategies already in use or on the horizon.</p>
+    <span class="sec-num">04</span>
+  </div>
+  <div class="tech-grid">
+    <div>
+      <div class="region-label">🇺🇸 Idaho · Key innovations</div>
+      <div class="tech-item">
+        <div class="tech-dot" style="background:#3a6fc4;"></div>
+        <div><h5>Membrane Filtration</h5><p>Nutrient recovery from liquid manure — separating solid and liquid fractions to reduce direct land application and recover concentrated N and P fertilizers.</p></div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-dot" style="background:#e07030;"></div>
+        <div><h5>Hydrothermal Carbonization (HTC)</h5><p>Converts <em>wet</em> manure into <strong>hydrochar</strong> — a stable carbon-rich soil amendment with lower pathogen risk, plus recyclable process water.</p></div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-dot" style="background:#50a050;"></div>
+        <div><h5>Carbon Offset Markets (LCFS)</h5><p>Revenue via California Low Carbon Fuel Standard credits incentivizes CAFOs to invest in cleaner manure management — turning compliance into profit.</p></div>
+      </div>
+      <div class="region-label" style="margin-top:2rem;">🇮🇹 Po Valley · Key innovations</div>
+      <div class="tech-item">
+        <div class="tech-dot" style="background:#c8860a;"></div>
+        <div><h5>Anaerobic Digestion + Nitrogen Stripping</h5><p>Digesters produce biogas (renewable energy) while nitrogen stripping concentrates N into manageable fertilizer pellets — closing the nutrient loop.</p></div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-dot" style="background:#4a8c3f;"></div>
+        <div><h5>Feeding Additives (3-NOP)</h5><p>New compounds can block methane production in the rumen by up to <strong>30%</strong> — reducing enteric emissions without impacting milk yield.</p></div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-dot" style="background:#2d5a27;"></div>
+        <div><h5>Improved Milk Yield Efficiency</h5><p>Higher production per cow = lower emissions per kg of product. A key PDO chain goal: less input, same quality output.</p></div>
+      </div>
+    </div>
+    <div>
+      <div class="chart-panel-light">
+        <h5>Projected GHG Reductions with Technology Adoption</h5>
+        <div class="chart-canvas-wrap-sm"><canvas id="mitigation-chart"></canvas></div>
+      </div>
+      <div style="margin-top:1.5rem;background:#fff;border-radius:8px;overflow:hidden;border:1px solid var(--line);">
+        <table style="width:100%;border-collapse:collapse;font-size:.8rem;">
+          <thead>
+            <tr style="background:var(--ink);color:#ccc;">
+              <th style="padding:.7rem 1rem;text-align:left;font-weight:500;letter-spacing:.05em;">Strategy</th>
+              <th style="padding:.7rem 1rem;text-align:left;font-weight:500;letter-spacing:.05em;">Region</th>
+              <th style="padding:.7rem 1rem;text-align:left;font-weight:500;letter-spacing:.05em;">Impact</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid #eee;"><td style="padding:.65rem 1rem;">Biogas digesters</td><td style="padding:.65rem 1rem;color:#4a8c3f;">🇮🇹 Italy</td><td style="padding:.65rem 1rem;color:#666;">CH₄ capture + energy</td></tr>
+            <tr style="border-bottom:1px solid #eee;background:#fafafa;"><td style="padding:.65rem 1rem;">Hydrochar (HTC)</td><td style="padding:.65rem 1rem;color:#3a6fc4;">🇺🇸 Idaho</td><td style="padding:.65rem 1rem;color:#666;">C sequestration</td></tr>
+            <tr style="border-bottom:1px solid #eee;"><td style="padding:.65rem 1rem;">3-NOP additive</td><td style="padding:.65rem 1rem;color:#888;">Both</td><td style="padding:.65rem 1rem;color:#666;">–30% enteric CH₄</td></tr>
+            <tr style="background:#fafafa;"><td style="padding:.65rem 1rem;">N stripping</td><td style="padding:.65rem 1rem;color:#4a8c3f;">🇮🇹 Italy</td><td style="padding:.65rem 1rem;color:#666;">NH₃ ↓, fertilizer ↑</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<footer>
+  <div><strong>IIS G. Mendel</strong> · Villa Cortese (MI)<br>CLIL Module: Livestock &amp; Environment · Grade 12 Vocational Ag Science</div>
+  <div style="text-align:right;">Crespi / Hampton &nbsp;·&nbsp; 4PA</div>
+</footer>
+
+<script>
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('pane-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+const nodeData = {
+  water: "<strong>Water</strong> — In Idaho, irrigation of alfalfa for feed is the biggest challenge: the Eastern Snake Plain Aquifer is under constant monitoring for nitrate concentrations (mg/L). In Italy, the focus shifts to reducing wash-water volumes to keep slurry manageable within the <strong>170 kg N/ha annual cap</strong> imposed by the EU Nitrates Directive.",
+  feed: "<strong>Feed / Land</strong> — Feeding accounts for ~70% of a farm's environmental footprint. PDO models restrict imported feed (e.g., no GMO soy for Parmigiano Reggiano) in favour of local hay and cereal grains. In Idaho, large CAFOs source alfalfa from irrigated fields — a major land and water commitment.",
+  ghg: "<strong>Gas (CH₄ / NH₃)</strong> — Enteric methane is the main GHG; ammonia (NH₃) is critical in the Po Valley where it contributes to PM₂.₅ fine particulate formation. Italian farms use biogas digesters to capture manure methane. Idaho CAFOs use membrane filtration and hydrothermal carbonization to reduce emissions and create value-added byproducts.",
+  waste: "<strong>Nutrient Load</strong> — Slurry is a resource (N-P-K fertilizer) but also a liability. The EU Nitrates Directive caps application at <strong>170 kg N/ha/yr</strong> in Nitrate Vulnerable Zones (NVZs). In Idaho, agronomic-rate rules and EPA NPDES permits govern land application. Italy → biogas + digestate; Idaho → enriched biochar + recycled water."
+};
+
+function selectNode(key, btn) {
+  document.querySelectorAll('.eco-node').forEach(n => n.classList.remove('active'));
+  btn.classList.add('active');
+  const info = document.getElementById('node-info');
+  info.classList.remove('placeholder');
+  info.innerHTML = nodeData[key];
+}
+
+let compChart;
+const metrics = {
+  herd:     { label:'Avg Herd Size (head)', data:[1500, 280] },
+  density:  { label:'Cows per Hectare',     data:[1.8, 4.2] },
+  nitrogen: { label:'Max N kg/ha/yr',       data:[220, 170] }
+};
+
+function initCompChart() {
+  const ctx = document.getElementById('comparison-chart').getContext('2d');
+  compChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Idaho (USA)', 'Lombardy (ITA)'],
+      datasets: [{ label: metrics.herd.label, data: metrics.herd.data, backgroundColor: ['rgba(58,111,196,.85)', 'rgba(74,140,63,.85)'], borderRadius: 6, barThickness: 60 }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { backgroundColor: '#fff', titleColor:'#111', bodyColor:'#555', borderColor:'#ddd', borderWidth:1 } },
+      scales: {
+        y: { beginAtZero:true, grid:{ color:'rgba(255,255,255,.08)' }, ticks:{ color:'#888' } },
+        x: { grid:{ display:false }, ticks:{ color:'#ccc', font:{ weight:'600' } } }
+      }
+    }
+  });
+}
+
+function updateComparisonChart() {
+  const m = metrics[document.getElementById('metric-select').value];
+  compChart.data.datasets[0].label = m.label;
+  compChart.data.datasets[0].data  = m.data;
+  compChart.update();
+}
+
+function initMitChart() {
+  const ctx = document.getElementById('mitigation-chart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['Now','+2y','+4y','+6y','+8y','+10y'],
+      datasets: [{ label: 'GHG Reduction (%)', data: [0,-5,-12,-20,-28,-35], borderColor: '#4a8c3f', backgroundColor: 'rgba(74,140,63,.1)', fill: true, tension: 0.35, pointRadius: 4, pointBackgroundColor: '#4a8c3f' }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend:{ display:false } },
+      scales: {
+        y: { title:{ display:true, text:'% Change', color:'#888' }, ticks:{ color:'#888' }, grid:{ color:'rgba(0,0,0,.05)' } },
+        x: { ticks:{ color:'#888' }, grid:{ display:false } }
+      }
+    }
+  });
+}
+
+window.onload = () => { initCompChart(); initMitChart(); };
+</script>
+</body>
+</html>
