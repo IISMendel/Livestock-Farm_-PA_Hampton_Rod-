@@ -78,20 +78,20 @@
   .feature-card h5 { font-weight: 600; font-size: .95rem; margin-bottom: .4rem; }
   .feature-card p { font-size: .85rem; color: #666; }
 
-  .eco-wrap { background: var(--ink); border-radius: 12px; padding: 3rem; color: #fff; }
+  .eco-wrap { background: #fff; border-radius: 16px; padding: 2.5rem 3rem; border: 1.5px solid var(--line); box-shadow: 0 2px 12px rgba(0,0,0,.06); }
   .eco-grid { display: grid; grid-template-columns: 1fr auto 1fr; gap: 2rem; align-items: center; }
   @media(max-width:700px){ .eco-grid { grid-template-columns: 1fr; } }
-  .eco-col-title { font-size: .62rem; letter-spacing: .15em; text-transform: uppercase; color: #666; margin-bottom: 1rem; text-align: center; }
-  .eco-node { display: flex; align-items: center; gap: .75rem; padding: .9rem 1.2rem; border-radius: 6px; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); cursor: pointer; transition: all .2s; font-size: .9rem; font-weight: 500; color: #ccc; margin-bottom: .75rem; text-align: left; width: 100%; font-family: 'DM Sans', sans-serif; }
-  .eco-node svg { width: 18px; height: 18px; flex-shrink: 0; }
-  .eco-node:hover, .eco-node.active { background: rgba(74,140,63,.2); border-color: var(--leaf); color: #fff; }
-  .eco-node.active { box-shadow: 0 0 0 1px var(--leaf); }
+  .eco-col-title { font-size: .65rem; letter-spacing: .15em; text-transform: uppercase; color: #999; margin-bottom: 1rem; text-align: center; font-weight: 700; }
+  .eco-node { display: flex; align-items: center; gap: .9rem; padding: 1rem 1.3rem; border-radius: 8px; background: #fff; border: 1.5px solid var(--line); cursor: pointer; transition: all .2s; font-size: .92rem; font-weight: 600; color: var(--ink); margin-bottom: .75rem; text-align: left; width: 100%; font-family: 'DM Sans', sans-serif; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+  .eco-node svg { width: 22px; height: 22px; flex-shrink: 0; }
+  .eco-node:hover { border-color: var(--leaf); background: #f4faf3; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(74,140,63,.12); }
+  .eco-node.active { border-color: var(--leaf); background: #f4faf3; box-shadow: 0 0 0 2px var(--leaf), 0 4px 12px rgba(74,140,63,.15); color: var(--moss); }
   .eco-center { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
-  .eco-circle { width: 140px; height: 140px; border-radius: 50%; border: 3px solid var(--leaf); display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(74,140,63,.1); text-align: center; }
-  .eco-circle svg { width: 32px; height: 32px; stroke: var(--leaf); fill: none; stroke-width: 1.5; margin-bottom: .4rem; }
-  .eco-circle span { font-size: .75rem; font-weight: 600; color: #aaa; letter-spacing: .05em; }
-  .eco-info { margin-top: 2rem; min-height: 80px; padding: 1.5rem; background: rgba(255,255,255,.04); border-radius: 8px; border-left: 3px solid var(--leaf); font-size: .9rem; color: #bbb; line-height: 1.7; }
-  .eco-info.placeholder { color: #555; font-style: italic; border-left-color: #333; }
+  .eco-circle { width: 150px; height: 150px; border-radius: 50%; border: 3px solid var(--leaf); display: flex; flex-direction: column; align-items: center; justify-content: center; background: #f4faf3; text-align: center; box-shadow: 0 0 0 8px rgba(74,140,63,.07); }
+  .eco-circle svg { width: 34px; height: 34px; stroke: var(--moss); fill: none; stroke-width: 1.5; margin-bottom: .4rem; }
+  .eco-circle span { font-size: .72rem; font-weight: 700; color: var(--moss); letter-spacing: .05em; text-transform: uppercase; }
+  .eco-info { margin-top: 2rem; min-height: 80px; padding: 1.5rem 2rem; background: #fff; border-radius: 10px; border-left: 4px solid var(--leaf); font-size: .92rem; color: #333; line-height: 1.8; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+  .eco-info.placeholder { color: #aaa; font-style: italic; border-left-color: var(--line); background: #faf9f6; box-shadow: none; }
 
   .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2.5rem; }
   @media(max-width:700px){ .compare-grid { grid-template-columns: 1fr; } }
@@ -147,7 +147,7 @@
 
 <div class="hero">
   <div class="max-w">
-    <div class="hero-tag">CLIL · Vocational Ag Science · 4PA — Crespi / Hampton</div>
+    <div class="hero-tag">CLIL · Vocational Ag Science · 4PA_Rodà_Hampton</div>
     <h1>Agriculture,<br>Production<br>&amp; <em>Sustainability</em></h1>
     <p class="hero-sub">Exploring how livestock farming interacts with the environment — comparing the industrial efficiency of the US with the quality-driven traditions of Italy.</p>
     <div class="hero-badges">
@@ -228,7 +228,7 @@
 </section>
 
 <!-- SECTION 2 -->
-<section class="section" id="ecosystem" style="background:#f0ebe0;">
+<section class="section" id="ecosystem">
 <div class="max-w">
   <div class="sec-title-wrap">
     <div class="sec-label">Section 02</div>
@@ -241,30 +241,30 @@
       <div>
         <p class="eco-col-title">Inputs</p>
         <button class="eco-node" onclick="selectNode('water',this)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#60a0d0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="#2a80cc" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
           Water
         </button>
         <button class="eco-node" onclick="selectNode('feed',this)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#c8860a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="#b86a00" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
           Feed / Land
         </button>
       </div>
       <div class="eco-center">
-        <div style="color:#555;font-size:1.4rem;font-weight:300;">→</div>
+        <div style="color:#bbb;font-size:1.6rem;font-weight:200;">→</div>
         <div class="eco-circle">
           <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
           <span>The Farm Unit</span>
         </div>
-        <div style="color:#555;font-size:1.4rem;font-weight:300;">→</div>
+        <div style="color:#bbb;font-size:1.6rem;font-weight:200;">→</div>
       </div>
       <div>
         <p class="eco-col-title">Outputs</p>
         <button class="eco-node" onclick="selectNode('ghg',this)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="#7a8fa6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/></svg>
           Gas (CH₄ / NH₃)
         </button>
         <button class="eco-node" onclick="selectNode('waste',this)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#4a8c3f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="#2d8a30" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
           Nutrient Load
         </button>
       </div>
@@ -419,10 +419,22 @@ function switchTab(id, btn) {
 }
 
 const nodeData = {
-  water: "<strong>Water</strong> — In Idaho, irrigation of alfalfa for feed is the biggest challenge: the Eastern Snake Plain Aquifer is under constant monitoring for nitrate concentrations (mg/L). In Italy, the focus shifts to reducing wash-water volumes to keep slurry manageable within the <strong>170 kg N/ha annual cap</strong> imposed by the EU Nitrates Directive.",
-  feed: "<strong>Feed / Land</strong> — Feeding accounts for ~70% of a farm's environmental footprint. PDO models restrict imported feed (e.g., no GMO soy for Parmigiano Reggiano) in favour of local hay and cereal grains. In Idaho, large CAFOs source alfalfa from irrigated fields — a major land and water commitment.",
-  ghg: "<strong>Gas (CH₄ / NH₃)</strong> — Enteric methane is the main GHG; ammonia (NH₃) is critical in the Po Valley where it contributes to PM₂.₅ fine particulate formation. Italian farms use biogas digesters to capture manure methane. Idaho CAFOs use membrane filtration and hydrothermal carbonization to reduce emissions and create value-added byproducts.",
-  waste: "<strong>Nutrient Load</strong> — Slurry is a resource (N-P-K fertilizer) but also a liability. The EU Nitrates Directive caps application at <strong>170 kg N/ha/yr</strong> in Nitrate Vulnerable Zones (NVZs). In Idaho, agronomic-rate rules and EPA NPDES permits govern land application. Italy → biogas + digestate; Idaho → enriched biochar + recycled water."
+  water: `<strong>Water</strong> — In Idaho, irrigation of alfalfa for feed is the biggest challenge: the Eastern Snake Plain Aquifer is under constant monitoring for nitrate concentrations (mg/L). In Italy, the focus shifts to reducing wash-water volumes to keep slurry manageable within the <strong>170 kg N/ha annual cap</strong> imposed by the EU Nitrates Directive.
+    <div style="border-left:3px solid #e8a020;padding:.6rem 1rem;background:#fffbf2;margin-top:1rem;font-style:italic;font-size:.85rem;color:#7a6a40;border-radius:0 4px 4px 0;">
+      In Idaho, irrigare i campi di erba medica per l'alimentazione è la sfida principale: la falda acquifera Eastern Snake Plain è costantemente monitorata per le concentrazioni di nitrati (mg/L). In Italia, l'obiettivo è ridurre i volumi di acque di lavaggio per mantenere il liquame entro il <strong>limite di 170 kg N/ha/anno</strong> imposto dalla Direttiva Nitrati UE.
+    </div>`,
+  feed: `<strong>Feed / Land</strong> — Feeding accounts for ~70% of a farm's environmental footprint. PDO models restrict imported feed (e.g., no GMO soy for Parmigiano Reggiano) in favour of local hay and cereal grains. In Idaho, large CAFOs source alfalfa from irrigated fields — a major land and water commitment.
+    <div style="border-left:3px solid #e8a020;padding:.6rem 1rem;background:#fffbf2;margin-top:1rem;font-style:italic;font-size:.85rem;color:#7a6a40;border-radius:0 4px 4px 0;">
+      L'alimentazione rappresenta circa il 70% dell'impronta ambientale di un allevamento. I disciplinari DOP limitano i mangimi importati (es. niente soia OGM per il Parmigiano Reggiano) a favore di fieno e cereali locali. In Idaho, i grandi CAFO si riforniscono di erba medica da campi irrigati — un impegno rilevante in termini di suolo e acqua.
+    </div>`,
+  ghg: `<strong>Gas (CH₄ / NH₃)</strong> — Enteric methane is the main GHG; ammonia (NH₃) is critical in the Po Valley where it contributes to PM₂.₅ fine particulate formation. Italian farms use biogas digesters to capture manure methane. Idaho CAFOs use membrane filtration and hydrothermal carbonization to reduce emissions and create value-added byproducts.
+    <div style="border-left:3px solid #e8a020;padding:.6rem 1rem;background:#fffbf2;margin-top:1rem;font-style:italic;font-size:.85rem;color:#7a6a40;border-radius:0 4px 4px 0;">
+      Il metano enterico (CH₄) è il principale gas serra; l'ammoniaca (NH₃) è critica in Pianura Padana, dove contribuisce alla formazione di particolato fine (PM₂.₅). Le aziende italiane usano digestori a biogas per catturare il metano dal liquame. I CAFO dell'Idaho usano filtrazione a membrana e carbonizzazione idrotermica per ridurre le emissioni e creare sottoprodotti di valore.
+    </div>`,
+  waste: `<strong>Nutrient Load</strong> — Slurry is a resource (N-P-K fertilizer) but also a liability. The EU Nitrates Directive caps application at <strong>170 kg N/ha/yr</strong> in Nitrate Vulnerable Zones (NVZs). In Idaho, agronomic-rate rules and EPA NPDES permits govern land application. Italy → biogas + digestate; Idaho → enriched biochar + recycled water.
+    <div style="border-left:3px solid #e8a020;padding:.6rem 1rem;background:#fffbf2;margin-top:1rem;font-style:italic;font-size:.85rem;color:#7a6a40;border-radius:0 4px 4px 0;">
+      Il liquame è una risorsa (fertilizzante N-P-K) ma anche un problema da gestire. La Direttiva Nitrati UE fissa un tetto di <strong>170 kg N/ha/anno</strong> nelle Zone Vulnerabili ai Nitrati (ZVN). In Idaho, le regole sul tasso agronomico e i permessi EPA NPDES disciplinano lo spandimento. Italia → biogas + digestato; Idaho → biochar arricchito + acqua riciclata.
+    </div>`
 };
 
 function selectNode(key, btn) {
